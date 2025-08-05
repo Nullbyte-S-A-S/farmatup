@@ -3,8 +3,21 @@ module.exports = function (api) {
   let plugins = [];
 
   return {
-    presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }], 'nativewind/babel'],
+    presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }], 'nativewind/babel',],
 
-    plugins,
+    plugins: [
+      [
+        'module-resolver',
+        {
+          root: ['./'],
+          alias: {
+            '@': './app',
+            '@components': './app/components',
+            '@utils': './app/utils',
+          },
+          extensions: ['.js', '.jsx', '.ts', '.tsx', '.ios.js', '.android.js'],
+        },
+      ],
+    ],
   };
 };

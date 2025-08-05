@@ -5,9 +5,10 @@
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "*"
-      ]
+      "~/*": ["*"],
+      "@/*": ["app/*"],
+      "@components/*": ["app/components/*"],
+      "@utils/*": ["app/utils/*"]
     }
   },
   "include": [
@@ -15,6 +16,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "nativewind-env.d.ts"
+    "nativewind-env.d.ts",
+    "declarations.d.ts"
   ]
 }
