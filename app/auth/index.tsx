@@ -1,21 +1,16 @@
-import { View, Image, Text, TextInput, ScrollView, Pressable } from 'react-native'
-import Checkbox from 'expo-checkbox';
-import { useFonts, Inter_700Bold, Inter_500Medium, Inter_400Regular } from '@expo-google-fonts/inter';
-import { ArrowRightSvg, EyeSvg, PasswordSvg, UserSvg } from '~/components/Icons';
+import { View, Image, Text, ScrollView, Pressable } from 'react-native'
+import { ArrowRightSvg, PasswordSvg, UserSvg } from '~/components/Icons';
 import { useState } from 'react';
+import CheckboxLabel from '~/components/CheckboxLabel';
+import FormInput from '~/components/FormInput';
+import FlexibleButton from '~/components/FlexibleButton';
 const LOGIN_LOGO = require("../../assets/img/login_img.png");
 
 export default function AuthIndex() {
     const [checked, setChecked] = useState(false);
+    const [password, setPassword] = useState("");
 
-    let [fontsLoaded] = useFonts({
-        Inter_700Bold,
-        Inter_500Medium,
-        Inter_400Regular,
-    });
-    if (!fontsLoaded) {
-        return null;
-    }
+
     return (
         <ScrollView className="flex-1 bg-white px-7">
             <View>
@@ -40,56 +35,26 @@ export default function AuthIndex() {
                                 className='text-center py-2 text-[#8A899C]'
                             >Ingrese un nombre de usuario y tu contraseña para continuar</Text>
                         </View>
-                        <View
-                            className="border w-[312px] h-[56px] px-[14px] py-[7px] mt-7"
-                            style={{ borderRadius: 10, borderColor: '#E6E6F4', borderWidth: 1 }}
-                        >
-                            <Text
-                                style={{ fontFamily: 'Inter_400Regular' }}
-                                className="text-[8px] text-[#6B7280] mb-[2px] ml-2">
-                                Nombre de usuario
-                            </Text>
 
-                            <View className="flex-row items-center">
-                                <UserSvg width={20} height={20} color="#007BFF" />
+                        <FormInput
+                            label='Correo electronico'
+                            hintText="Ingresa su correo electronico"
+                            keyboardType="email-address"
+                            iconPrefix={<UserSvg width={20} height={20} color="#007BFF" />}
+                        />
+                        <FormInput
+                            label='Contraseña'
+                            hintText="Ingresa tu contraseña"
+                            keyboardType="visible-password"
+                            isPassword
+                            value={password}
+                            onChangeText={setPassword}
+                            iconPrefix={<PasswordSvg width={20} height={20} color="#007BFF" />}
 
-                                <TextInput
-                                    placeholder="Ingresa tu usuario"
-                                    keyboardType="default"
-                                    placeholderTextColor="#9CA3AF"
-                                    className="ml-2 flex-1 text-[14px]"
-                                    style={{ padding: 0 }}
-                                />
-                            </View>
-                        </View>
-                        <View
-                            className="border w-[312px] h-[56px] px-[14px] py-[7px] mt-4"
-                            style={{ borderRadius: 10, borderColor: '#E6E6F4', borderWidth: 1 }}
-                        >
-                            <Text
-                                style={{ fontFamily: 'Inter_400Regular' }}
-                                className="text-[8px] text-[#6B7280] mb-[2px] ml-2">
-                                Nombre de usuario
-                            </Text>
-
-                            <View className="flex-row items-center">
-                                <PasswordSvg width={20} height={20} color="#007BFF" />
-
-                                <TextInput
-                                    placeholder="Ingresa tu usuario"
-                                    keyboardType="visible-password"
-                                    placeholderTextColor="#9CA3AF"
-                                    className="ml-2 flex-1 text-[14px]"
-                                    style={{ padding: 0 }}
-                                />
-                                <EyeSvg width={20} height={20} />
-                            </View>
-                        </View>
+                        />
                         <View className='w-full py-5 px-2 flex flex-row justify-between'>
                             <View className='flex flex-row gap-3'>
-                                <Checkbox value={checked} onValueChange={setChecked} />
-                                <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}
-                                    className='text-[#6B7280] text-center'>Recordarme</Text>
+                                <CheckboxLabel labelStyle={{ fontFamily: 'Inter_500Medium', fontSize: 12 }} checked={checked} setChecked={setChecked} label={"Recordarme"} />
                             </View>
                             <Pressable>
                                 <Text
@@ -97,21 +62,7 @@ export default function AuthIndex() {
                                     className='text-[#007BFF]'>¿Olvidaste tu contraseña?</Text>
                             </Pressable>
                         </View>
-                        <Pressable
-                            style={{ borderRadius: 10 }}
-                            className="w-[312px] h-[56px] px-[14px] py-[7px] bg-[#007BFF] mt-4
-                             flex flex-row gap-4 items-center justify-center"
-                        >
-                            <Text
-                                style={{ fontFamily: 'Inter_500Medium', fontSize: 14 }}
-                                className="text-white text-center"
-                            >
-                                Iniciar sesión
-                            </Text>
-                            <View className='text-center'>
-                                <ArrowRightSvg width={12} height={12} />
-                            </View>
-                        </Pressable>
+                        <FlexibleButton title={'Iniciar sesión'} onPress={function (): void { console.log("Hi, I am button.The Button is in the login") }} iconSuffix={<ArrowRightSvg width={12} height={12} />} />
 
                     </View>
                 </View>

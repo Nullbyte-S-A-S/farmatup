@@ -1,14 +1,15 @@
 import Checkbox from 'expo-checkbox';
-import { Text, View } from 'react-native';
+import { StyleProp, Text, TextStyle, View } from 'react-native';
 
 type CheckboxLabelProps = {
   checked: boolean;
   setChecked: (value: boolean) => void;
-  label: String;
+  label: string;
   style?: object;
+  labelStyle?: StyleProp<TextStyle>
 };
 
-const CheckboxLabel: React.FC<CheckboxLabelProps> = ({ checked, setChecked, label, style }) => {
+const CheckboxLabel: React.FC<CheckboxLabelProps> = ({ checked, setChecked, label, style, labelStyle }) => {
   return (
     <View className="mb-4 flex-row items-center" style={style}>
       <Checkbox
@@ -22,7 +23,7 @@ const CheckboxLabel: React.FC<CheckboxLabelProps> = ({ checked, setChecked, labe
           marginRight: 8,
         }}
       />
-      <Text className="text-center text-[#6B7280]">{label}</Text>
+      <Text style={labelStyle} className="text-center text-[#6B7280]">{label}</Text>
     </View>
   );
 };

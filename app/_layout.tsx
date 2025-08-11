@@ -4,7 +4,7 @@ import { Slot } from 'expo-router';
 
 //TODO: INDICA LA RUTA INICIAL
 export const unstable_settings = {
-  initialRouteName: 'auth',
+  initialRouteName: '(tabs)',
 };
 
 export default function RootLayout() {

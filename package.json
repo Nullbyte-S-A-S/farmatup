@@ -18,7 +18,9 @@
     "@expo-google-fonts/inter": "^0.4.1",
     "@expo/vector-icons": "^14.0.0",
     "@react-navigation/native": "^7.0.3",
+    "axios": "^1.11.0",
     "expo": "^53.0.20",
+    "expo-checkbox": "~4.1.4",
     "expo-constants": "~17.1.4",
     "expo-dev-client": "~5.2.4",
     "expo-dev-launcher": "^5.0.17",
@@ -38,8 +40,7 @@
     "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-web": "^0.20.0",
-    "zustand": "^4.5.1",
-    "expo-checkbox": "~4.1.4"
+    "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

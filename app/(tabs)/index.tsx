@@ -1,15 +1,16 @@
 import { Stack } from 'expo-router';
 
 import { StyleSheet, View } from 'react-native';
-
-import { ScreenContent } from '~/components/ScreenContent';
+import { TabletSvg } from '~/components/Icons';
+import { ItemCard } from '~/components/ItemCard';
 
 export default function Home() {
   return (
     <>
       <Stack.Screen options={{ title: 'Tab ' }} />
       <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/index.tsx" title="Tab One" />
+        <ItemCard title={'Total productos'} content={'1,532 items'} icon={<TabletSvg />}
+          isBackgroundIcon backgroundIcon='#DBEAFE' />
       </View>
     </>
   );
