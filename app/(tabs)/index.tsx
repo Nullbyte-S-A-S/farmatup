@@ -1,16 +1,22 @@
 import { Stack } from 'expo-router';
 
-import { StyleSheet, View } from 'react-native';
-import { TabletSvg } from '~/components/Icons';
-import { ItemCard } from '~/components/ItemCard';
+import { StyleSheet, View, Text } from 'react-native';
+import { ItemConten } from '~/components/ItemConten';
 
 export default function Home() {
   return (
     <>
       <Stack.Screen options={{ title: 'Tab ' }} />
       <View style={styles.container}>
-        <ItemCard title={'Total productos'} content={'1,532 items'} icon={<TabletSvg />}
-          isBackgroundIcon backgroundIcon='#DBEAFE' />
+        <ItemConten
+          headerTitle="Mis Tareas"
+          headerButtons={[
+            { content: "Editar", onPress: () => console.log("Editar") },
+          ]}
+        >
+          <Text>Contenido aquí</Text>
+        </ItemConten>
+
       </View>
     </>
   );
