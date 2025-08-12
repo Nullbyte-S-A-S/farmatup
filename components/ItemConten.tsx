@@ -39,9 +39,9 @@ export const ItemConten = ({
                 height,
                 borderRadius
             }}
-            className="bg-white px-4 py-4"
+            className="bg-white py-4"
         >
-            <View className="flex flex-row justify-between items-center">
+            <View className="flex flex-row px-4 justify-between items-center">
                 {headerTitle ? (
                     <Text
                         style={{ fontFamily: "Inter_600SemiBold", fontSize: 18 }}
@@ -51,7 +51,7 @@ export const ItemConten = ({
                     </Text>
                 ) : <View />}
 
-                <View className="flex flex-row items-center space-x-2">
+                <View className="flex flex-row px-4 items-center space-x-2">
                     {headerButtons.map((btn, index) => (
                         <Pressable
                             key={index}
@@ -75,7 +75,7 @@ export const ItemConten = ({
                     ))}
                 </View>
             </View>
-            <View className="py-4">
+            <View className="w-full py-4">
                 {children}
             </View>
         </View>
