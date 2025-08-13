@@ -1,15 +1,25 @@
+import React from 'react';
 import { Stack } from 'expo-router';
-
 import { StyleSheet, View } from 'react-native';
+import { ItemConten } from '~/components/ItemConten';
+import { DataLine } from '~/components/DataLine';
 
-import { ScreenContent } from '~/components/ScreenContent';
 
 export default function Home() {
+
   return (
     <>
-      <Stack.Screen options={{ title: 'Tab One' }} />
+      <Stack.Screen options={{ title: 'Tab' }} />
       <View style={styles.container}>
-        <ScreenContent path="app/(tabs)/index.tsx" title="Tab One" />
+        <ItemConten
+          headerTitle="Ventas diarias"
+          headerButtons={[
+            { content: "Ver más", onPress: () => console.log("Ver más") },
+          ]}
+        >
+          <DataLine label={["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]}
+            data={[800, 900, 1100, 950, 1200, 1350, 1250]} />
+        </ItemConten>
       </View>
     </>
   );
