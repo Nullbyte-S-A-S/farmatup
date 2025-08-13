@@ -8,23 +8,19 @@ interface User {
   role: string;
 }
 
-interface LoginResposne {
+interface LoginResponse {
   message: string;
   token: string;
   user: User;
 }
 
 export class AuthService {
-  async login({ email, password }: { email: string; password: string }): Promise<LoginResposne> {
+  async login({ email, password }: { email: string; password: string }): Promise<LoginResponse> {
     try {
-      const { data } = await api.post<{ token: string; user: User; message: string }>('/login', {
+      const { data } = await api.post<LoginResponse>('/login', {
         email,
         password,
       });
-
-      if (!data.token) {
-        throw new Error('Usuario invalido');
-      }
 
       const user: User = {
         id: data.user.id,
@@ -33,9 +29,9 @@ export class AuthService {
         role: data.user.role,
       };
 
-      await AsyncStorage.multiMerge([
-        ['toke', data.token],
-        ['user', JSON.stringify(data.user)],
+      await AsyncStorage.multiSet([
+        ['token', data.token],
+        ['user', JSON.stringify(user)],
       ]);
 
       return {
@@ -44,8 +40,8 @@ export class AuthService {
         token: data.token,
       };
     } catch (err: any) {
-      const msj = err?.response.data.message || err?.message || 'Error al intentanr loguear';
-      throw Error(msj);
+      const msj = err?.response?.data?.message || err?.message || 'Error al intentar loguear';
+      throw new Error(msj);
     }
   }
 }

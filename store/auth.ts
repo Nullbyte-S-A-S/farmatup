@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { AuthService } from '~/services/auth';
 
-const service = new AuthService();
+const authService = new AuthService();
 
 interface User {
   id: number;
@@ -13,23 +13,24 @@ interface User {
 interface AuthState {
   user: User | null;
   errorMessage: string | null;
-  status: 'checking' | 'no-authenticate' | 'authenticate';
+  status: 'checking' | 'no-authenticate' | 'authenticated';
   login: (email: string, password: string) => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   errorMessage: null,
   status: 'checking',
   login: async (email, password) => {
     set({ status: 'checking', errorMessage: null });
     try {
-      const { user } = await service.login({ email, password });
-      set({ user: user, errorMessage: null, status: 'authenticate' });
+      const res = await authService.login({ email, password });
+      set({ status: 'authenticated', user: res.user });
     } catch (error: any) {
-      const msj =
-        error?.message || error?.data.message || error?.reponse.data.message || 'Error al loguear';
-      set({ user: null, errorMessage: msj, status: 'no-authenticate' });
+      set({
+        status: 'no-authenticate',
+        errorMessage: error?.message || error?.data.message || error?.response.data.message,
+      });
     }
   },
 }));

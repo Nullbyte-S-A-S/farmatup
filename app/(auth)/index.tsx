@@ -15,10 +15,11 @@ export default function Login() {
     const { status, login, user } = useAuthStore();
     const router = useRouter();
 
-    const handleSubmit = () => {
-        login(email, password);
+    const handleSubmit = async () => {
+        await login(email, password);
         //TODO: BUSCAR OTRA MANERA DE VALIDAR EL ROL
-        if (status === 'authenticate' && user?.role === "admin") {
+        console.log(status)
+        if (status === 'authenticated' && user?.role.toLowerCase() === 'ADMIN') {
             router.push("/(tabs)/two")
         }
     }
