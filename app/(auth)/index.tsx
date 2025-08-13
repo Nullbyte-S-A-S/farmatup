@@ -4,12 +4,25 @@ import { useState } from 'react';
 import CheckboxLabel from '~/components/CheckboxLabel';
 import FormInput from '~/components/FormInput';
 import FlexibleButton from '~/components/FlexibleButton';
+import { useAuthStore } from '~/store/auth';
+import { useRouter } from 'expo-router';
 const LOGIN_LOGO = require("../../assets/img/login_img.png");
 
-export default function AuthIndex() {
+export default function Login() {
     const [checked, setChecked] = useState(false);
     const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("")
+    const { status, login, user } = useAuthStore();
+    const router = useRouter();
 
+    const handleSubmit = async () => {
+        await login(email, password);
+        //TODO: BUSCAR OTRA MANERA DE VALIDAR EL ROL
+        console.log(status)
+        if (status === 'authenticated' && user?.role.toLowerCase() === 'ADMIN') {
+            router.push("/(tabs)/two")
+        }
+    }
 
     return (
         <ScrollView className="flex-1 bg-white px-7">
@@ -40,6 +53,8 @@ export default function AuthIndex() {
                             label='Correo electronico'
                             hintText="Ingresa su correo electronico"
                             keyboardType="email-address"
+                            value={email}
+                            onChangeText={setEmail}
                             iconPrefix={<UserSvg width={20} height={20} color="#007BFF" />}
                         />
                         <FormInput
@@ -62,8 +77,7 @@ export default function AuthIndex() {
                                     className='text-[#007BFF]'>¿Olvidaste tu contraseña?</Text>
                             </Pressable>
                         </View>
-                        <FlexibleButton title={'Iniciar sesión'} onPress={function (): void { console.log("Hi, I am button.The Button is in the login") }} iconSuffix={<ArrowRightSvg width={12} height={12} />} />
-
+                        <FlexibleButton title={`${status === 'checking' ? "cargando..." : 'Iniciar sesión'}`} onPress={handleSubmit} iconSuffix={<ArrowRightSvg width={12} height={12} />} />
                     </View>
                 </View>
             </View>

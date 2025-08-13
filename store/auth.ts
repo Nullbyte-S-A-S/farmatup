@@ -1,24 +1,36 @@
 import { create } from 'zustand';
 import { AuthService } from '~/services/auth';
 
-const service = new AuthService();
+const authService = new AuthService();
 
-interface User {}
+interface User {
+  id: number;
+  fullname: string;
+  email: string;
+  role: string;
+}
 
 interface AuthState {
   user: User | null;
   errorMessage: string | null;
-  status: 'checking' | 'no-authenticate' | 'authenticate';
-  login: (email: string, password: string) => void;
+  status: 'checking' | 'no-authenticate' | 'authenticated';
+  login: (email: string, password: string) => Promise<void>;
 }
 
-export const AuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   errorMessage: null,
   status: 'checking',
-  login: (email, password) => {
+  login: async (email, password) => {
+    set({ status: 'checking', errorMessage: null });
     try {
-      const response = service.login({ email, password });
-    } catch (error) {}
+      const res = await authService.login({ email, password });
+      set({ status: 'authenticated', user: res.user });
+    } catch (error: any) {
+      set({
+        status: 'no-authenticate',
+        errorMessage: error?.message || error?.data.message || error?.response.data.message,
+      });
+    }
   },
 }));
