@@ -1,24 +1,29 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { Stack } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { ItemConten } from '~/components/ItemConten';
-import { DataLine } from '~/components/DataLine';
+import { DataBar } from '~/components/DataBar';
 
-
-export default function Home() {
+export default function Home(): JSX.Element {
+  const inventoryLabels: string[] = ["Medicamentos", "Cosméticos", "Suplementos", "Higiene"];
+  const inventoryData: number[] = [75, 100, 45, 30];
+  const inventoryColors: string[] = ["#007BFF", "#28A745", "#FFC107", "#DC3545"];
 
   return (
     <>
       <Stack.Screen options={{ title: 'Tab' }} />
       <View style={styles.container}>
         <ItemConten
-          headerTitle="Ventas diarias"
+          headerTitle="Estado del inventario"
           headerButtons={[
-            { content: "Ver más", onPress: () => console.log("Ver más") },
+            { content: "Ver todos", onPress: () => console.log("Ver todos") },
           ]}
         >
-          <DataLine label={["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]}
-            data={[800, 900, 1100, 950, 1200, 1350, 1250]} />
+          <DataBar
+            labels={inventoryLabels}
+            data={inventoryData}
+            colors={inventoryColors}
+          />
         </ItemConten>
       </View>
     </>
