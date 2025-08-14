@@ -13,14 +13,14 @@ interface User {
 interface AuthState {
   user: User | null;
   errorMessage: string | null;
-  status: 'checking' | 'no-authenticate' | 'authenticated';
+  status: 'checking' | 'no-authenticated' | 'authenticated';
   login: (email: string, password: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   errorMessage: null,
-  status: 'checking',
+  status: 'no-authenticated',
   login: async (email, password) => {
     set({ status: 'checking', errorMessage: null });
     try {
@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ status: 'authenticated', user: res.user });
     } catch (error: any) {
       set({
-        status: 'no-authenticate',
+        status: 'no-authenticated',
         errorMessage: error?.message || error?.data.message || error?.response.data.message,
       });
     }

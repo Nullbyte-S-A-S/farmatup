@@ -1,6 +1,6 @@
 import { View, Image, Text, ScrollView, Pressable } from 'react-native'
 import { ArrowRightSvg, PasswordSvg, UserSvg } from '~/components/Icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CheckboxLabel from '~/components/CheckboxLabel';
 import FormInput from '~/components/FormInput';
 import FlexibleButton from '~/components/FlexibleButton';
@@ -15,13 +15,16 @@ export default function Login() {
     const { status, login, user } = useAuthStore();
     const router = useRouter();
 
+    useEffect(() => {
+        let role = user?.role.toLowerCase();
+        if (status === 'authenticated' && role === 'admin') {
+            router.navigate("/(tabs)/two")
+        }
+    }, [status, user, router])
+
+
     const handleSubmit = async () => {
         await login(email, password);
-        //TODO: BUSCAR OTRA MANERA DE VALIDAR EL ROL
-        console.log(status)
-        if (status === 'authenticated' && user?.role.toLowerCase() === 'ADMIN') {
-            router.push("/(tabs)/two")
-        }
     }
 
     return (

@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { getEnv } from '~/helpers/getEnv';
+import { API_URL } from '@env';
 
-console.log(getEnv.API_URL);
+console.log(API_URL);
 const api = axios.create({
-  baseURL: getEnv.API_URL,
+  baseURL: API_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
