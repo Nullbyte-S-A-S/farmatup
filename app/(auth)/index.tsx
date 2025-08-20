@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Image, Platform, Pressable, ScrollView, Text, ToastAndroid, View } from 'react-native';
+import { Image, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import CheckboxLabel from '~/components/CheckboxLabel';
 import FlexibleButton from '~/components/FlexibleButton';
 import FormInput from '~/components/FormInput';
@@ -85,75 +85,91 @@ export default function Login() {
   }, [status, user, router]);
 
   return (
-    <ScrollView className="flex-1 bg-white px-7">
-      <View>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <ScrollView className="flex-1 bg-white px-7">
         <View>
-          <View className="flex w-full items-center justify-center">
-            <Image source={LOGIN_LOGO} className="h-[240px] w-[240px]" resizeMode="contain" />
-          </View>
-          <View className="flex w-full items-center justify-center">
-            <View className="w-[279px]">
-              <Text
-                style={{ fontFamily: 'Inter_700Bold', fontSize: 26 }}
-                className="text-center text-[#23305D]">
-                Iniciar sesión
-              </Text>
-              <Text
-                style={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}
-                className="py-2 text-center text-[#8A899C]">
-                Ingrese un nombre de usuario y tu contraseña para continuar
-              </Text>
+          <View>
+            <View className="flex w-full items-center justify-center">
+              <Image source={LOGIN_LOGO} className="h-[240px] w-[240px]" resizeMode="contain" />
             </View>
-
-            <FormInput
-              label="Correo electronico"
-              hintText="Ingresa su correo electronico"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-              value={email}
-              onChangeText={setEmail}
-              iconPrefix={<UserSvg width={20} height={20} color="#007BFF" />}
-              errorMessage={emailError || undefined}
-              hasError={!!emailError}
-            />
-            <FormInput
-              label="Contraseña"
-              hintText="Ingresa tu contraseña"
-              autoCapitalize="none"
-              isPassword
-              value={password}
-              onChangeText={setPassword}
-              iconPrefix={<PasswordSvg width={20} height={20} color="#007BFF" />}
-              errorMessage={passwordError || undefined}
-              hasError={!!passwordError}
-            />
-            <View className="flex w-full flex-row justify-between px-2 py-5">
-              <View className="flex flex-row gap-3">
-                <CheckboxLabel
-                  labelStyle={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}
-                  checked={checked}
-                  setChecked={setChecked}
-                  label={'Recordarme'}
-                />
-              </View>
-              <Pressable>
+            <View className="flex w-full items-center justify-center">
+              <View className="w-[279px]">
+                <Text
+                  style={{ fontFamily: 'Inter_700Bold', fontSize: 26 }}
+                  className="text-center text-[#23305D]">
+                  Iniciar sesión
+                </Text>
                 <Text
                   style={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}
-                  className="text-[#007BFF]">
-                  ¿Olvidaste tu contraseña?
+                  className="py-2 text-center text-[#8A899C]">
+                  Ingrese un nombre de usuario y tu contraseña para continuar
                 </Text>
-              </Pressable>
+              </View>
+
+              <FormInput
+                label="Correo electronico"
+                hintText="Ingresa su correo electronico"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                value={email}
+                onChangeText={setEmail}
+                iconPrefix={<UserSvg width={20} height={20} color="#007BFF" />}
+                errorMessage={emailError || undefined}
+                hasError={!!emailError}
+              />
+              <FormInput
+                label="Contraseña"
+                hintText="Ingresa tu contraseña"
+                autoCapitalize="none"
+                isPassword
+                value={password}
+                onChangeText={setPassword}
+                iconPrefix={<PasswordSvg width={20} height={20} color="#007BFF" />}
+                errorMessage={passwordError || undefined}
+                hasError={!!passwordError}
+              />
+              <View className="flex w-full flex-row justify-between px-2 py-5">
+                <View className="flex flex-row gap-3">
+                  <CheckboxLabel
+                    labelStyle={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}
+                    checked={checked}
+                    setChecked={setChecked}
+                    label={'Recordarme'}
+                  />
+                </View>
+                <Pressable>
+                  <Text
+                    style={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}
+                    className="text-[#007BFF]">
+                    ¿Olvidaste tu contraseña?
+                  </Text>
+                </Pressable>
+              </View>
+              <FlexibleButton
+                title={`${status === 'checking' ? 'cargando...' : 'Iniciar sesión'}`}
+                onPress={handleSubmit}
+                iconSuffix={<ArrowRightSvg width={12} height={12} />}
+                disabled={status === 'checking'}
+              />
             </View>
-            <FlexibleButton
-              title={`${status === 'checking' ? 'cargando...' : 'Iniciar sesión'}`}
-              onPress={handleSubmit}
-              iconSuffix={<ArrowRightSvg width={12} height={12} />}
-              disabled={status === 'checking'}
-            />
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+    paddingTop: StatusBar.currentHeight,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
