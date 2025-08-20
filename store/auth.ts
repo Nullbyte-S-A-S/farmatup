@@ -20,7 +20,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   errorMessage: null,
-  status: 'checking',
+  status: 'no-authenticate',
   login: async (email, password) => {
     set({ status: 'checking', errorMessage: null });
     try {
@@ -31,6 +31,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         status: 'no-authenticate',
         errorMessage: error?.message || error?.data.message || error?.response.data.message,
       });
+      throw error;
     }
   },
 }));
