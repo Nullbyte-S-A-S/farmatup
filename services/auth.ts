@@ -29,6 +29,8 @@ export class AuthService {
         role: data.user.role,
       };
 
+      if (!data.token) throw Error('Este usuario no se encuentra registrado');
+
       await AsyncStorage.multiSet([
         ['token', data.token],
         ['user', JSON.stringify(user)],
