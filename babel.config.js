@@ -3,7 +3,7 @@ module.exports = function (api) {
   let plugins = [];
 
   return {
-    presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }], 'nativewind/babel',],
+    presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }], 'nativewind/babel'],
 
     plugins: [
       [
@@ -18,6 +18,7 @@ module.exports = function (api) {
           extensions: ['.js', '.jsx', '.ts', '.tsx', '.ios.js', '.android.js'],
         },
       ],
+      'module:react-native-dotenv',
     ],
   };
 };

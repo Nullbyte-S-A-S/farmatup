@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { AuthService } from '~/services/auth';
 
@@ -13,14 +14,16 @@ interface User {
 interface AuthState {
   user: User | null;
   errorMessage: string | null;
-  status: 'checking' | 'no-authenticate' | 'authenticated';
+  status: 'checking' | 'no-authenticated' | 'authenticated';
   login: (email: string, password: string) => Promise<void>;
+  // checkStatus: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   errorMessage: null,
-  status: 'no-authenticate',
+  status: 'no-authenticated',
   login: async (email, password) => {
     set({ status: 'checking', errorMessage: null });
     try {
@@ -28,7 +31,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ status: 'authenticated', user: res.user });
     } catch (error: any) {
       set({
-        status: 'no-authenticate',
+        status: 'no-authenticated',
+        errorMessage: error?.message || error?.data.message || error?.response.data.message,
+      });
+      throw error;
+    }
+  },
+
+  logout: async () => {
+    set({ status: 'checking' });
+    try {
+      await AsyncStorage.multiRemove(['token', 'user']);
+      set({ status: 'no-authenticated', user: null, errorMessage: null });
+    } catch (error: any) {
+      set({
+        status: 'no-authenticated',
         errorMessage: error?.message || error?.data.message || error?.response.data.message,
       });
       throw error;
