@@ -28,6 +28,9 @@ export interface FormInputProps extends Omit<TextInputProps, 'placeholderTextCol
   inputStyle?: StyleProp<TextStyle>;
   value?: string;
   onChangeText?: (text: string) => void;
+  errorMessage?: string;
+  hasError?: boolean;
+  errorTextStyle?: StyleProp<TextStyle>;
 }
 
 export default function FormInput({
@@ -45,6 +48,9 @@ export default function FormInput({
   inputStyle,
   value: controlledValue,
   onChangeText,
+  errorMessage,
+  hasError = false,
+  errorTextStyle,
   ...rest
 }: FormInputProps) {
   const [secure, setSecure] = useState<boolean>(!!isPassword);
@@ -55,7 +61,7 @@ export default function FormInput({
 
   const baseContainerStyle: ViewStyle = {
     borderRadius: 10,
-    borderColor: '#E6E6F4',
+    borderColor: hasError ? 'red' : '#E6E6F4',
     borderWidth: 1,
     ...(typeof maxWidth === 'number' ? { width: maxWidth } : {}),
   };
@@ -121,31 +127,38 @@ export default function FormInput({
   };
 
   return (
-    <View
-      className={`mt-4 px-[14px] pb-[14px] pt-[7px] ${typeof maxWidth === 'number' ? '' : 'w-full'}`}
-      style={[baseContainerStyle, containerStyle]}>
-      <Text
-        style={{ fontFamily: 'Inter_400Regular' }}
-        className="mb-[2px] ml-2 text-[8px] text-[#6B7280]">
-        {label}
-      </Text>
+    <View className="w-full">
+      <View
+        className={`mt-4 px-[14px] pb-[14px] pt-[7px] ${typeof maxWidth === 'number' ? '' : 'w-full'}`}
+        style={[baseContainerStyle, containerStyle]}>
+        <Text
+          style={{ fontFamily: 'Inter_400Regular' }}
+          className="mb-[2px] ml-2 text-[8px] text-[#6B7280]">
+          {label}
+        </Text>
 
-      <View className="flex-row items-center" style={{ height: height || 20 }}>
-        {renderIcon(iconPrefix, iconColorPrefix)}
+        <View className="flex-row items-center" style={{ height: height || 20 }}>
+          {renderIcon(iconPrefix, iconColorPrefix)}
 
-        <TextInput
-          {...rest}
-          value={inputValue}
-          onChangeText={handleChange}
-          placeholder={hintText}
-          placeholderTextColor={colorHintText}
-          secureTextEntry={isPassword ? secure : false}
-          className="ml-2 flex-1 text-[14px]"
-          style={[{ padding: 0, height: '100%' }, inputStyle]}
-        />
+          <TextInput
+            {...rest}
+            value={inputValue}
+            onChangeText={handleChange}
+            placeholder={hintText}
+            placeholderTextColor={colorHintText}
+            secureTextEntry={isPassword ? secure : false}
+            className="ml-2 flex-1 text-[14px]"
+            style={[{ padding: 0, height: '100%' }, inputStyle]}
+          />
 
-        {isPassword ? renderPasswordToggle() : renderIcon(iconSuffix, iconColorSuffix)}
+          {isPassword ? renderPasswordToggle() : renderIcon(iconSuffix, iconColorSuffix)}
+        </View>
       </View>
+      {errorMessage ? (
+        <Text style={[{ color: 'red', fontSize: 10, paddingTop: 8 }, errorTextStyle]}>
+          {errorMessage}
+        </Text>
+      ) : null}
     </View>
   );
 }
