@@ -139,13 +139,12 @@ export default function FormInput({
     );
   };
 
-  // 🔹 Select dropdown — mismo diseño, pero sin FlatList (para evitar el warning).
   const renderSelect = () => (
     <View className="flex-1">
       <Pressable
         onPress={() => setDropdownOpen((o) => !o)}
         className="h-full flex-row items-center justify-between">
-        <Text className={`text-[14px] ${selected ? 'text-black' : 'text-[#9CA3AF]'}`}>
+        <Text className={`text-[14px] text-[#9CA3AF]`}>
           {selected || selectHintText || hintText}
         </Text>
         <Text className="text-gray-400">▼</Text>
@@ -154,8 +153,7 @@ export default function FormInput({
       {dropdownOpen && (
         <View
           className="absolute left-0 right-0 top-[45px] z-10 rounded-lg border border-gray-200 bg-white shadow-lg"
-          style={{ maxHeight: 240, elevation: 8 }} // elevation ayuda en Android
-        >
+          style={{ maxHeight: 240, elevation: 8 }}>
           <ScrollView
             nestedScrollEnabled
             keyboardShouldPersistTaps="handled"
@@ -191,28 +189,29 @@ export default function FormInput({
 
         {/* 🔹 Switch por tipo */}
         {type === 'select' ? (
-          <View className="flex-row items-center" style={{ height: height || 20 }}>
+          <View className="ml-2 flex-row items-center" style={{ height: height || 20 }}>
             {iconPrefix ? prefixBlock : null}
             {renderSelect()}
           </View>
         ) : type === 'select+input' ? (
           <View className="flex-row items-center" style={{ height: height || 20 }}>
             {iconPrefix ? prefixBlock : null}
-            <View className="flex-1">{renderSelect()}</View>
+            <View className="ml-1 mt-2 h-[25px] w-[90px] rounded-lg bg-[#E9E9EE] px-2">
+              {renderSelect()}
+            </View>
             <TextInput
               {...rest}
               value={inputValue}
               onChangeText={handleChange}
               placeholder={hintText}
               placeholderTextColor={colorHintText}
-              className="ml-2 flex-1 text-[14px]"
+              className="ml-2 mt-1 flex-1 text-[14px]"
               style={[{ padding: 0, height: '100%' }, inputStyle]}
             />
           </View>
         ) : (
           <View className="flex-row items-center" style={{ height: height || 20 }}>
             {iconPrefix ? prefixBlock : null}
-
             <TextInput
               {...rest}
               value={inputValue}
