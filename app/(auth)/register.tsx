@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { Userprofile } from '~/components/Icons';
+import { ArrowBack, Userprofile } from '~/components/commons/Icons';
 
 export default function Register() {
     return (
@@ -12,9 +12,14 @@ export default function Register() {
                     end={{ x: 0, y: 1 }}
                     className="w-full h-[262px] rounded-b-[70%]"
                 />
-
                 <TouchableOpacity
-                    activeOpacity={0.8}
+                    activeOpacity={0.7}
+                    className='bg-white absolute top-12 left-8 rounded-lg p-1'
+                >
+                    <ArrowBack />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    activeOpacity={0.7}
                     className="w-full flex justify-center items-center"
                 >
                     <View
