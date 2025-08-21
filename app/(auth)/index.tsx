@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Image, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import CheckboxLabel from '~/components/CheckboxLabel';
 import FlexibleButton from '~/components/FlexibleButton';
-import FormInput from '~/components/FormInput';
+import FormInput from '~/components/commons/FormInput';
 import { ArrowRightSvg, PasswordSvg, UserSvg } from '~/components/commons/Icons';
 import { useAuthStore } from '~/store/auth';
 const LOGIN_LOGO = require('../../assets/img/login_img.png');
