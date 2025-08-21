@@ -1,3 +1,4 @@
+import { MenuProvider } from 'react-native-popup-menu';
 import '../global.css';
 
 import { Slot } from 'expo-router';
@@ -9,6 +10,8 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   return (
-    <Slot />
+    <MenuProvider>
+      <Slot />
+    </MenuProvider>
   );
 }
