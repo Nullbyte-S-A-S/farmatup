@@ -1,8 +1,8 @@
 import { Stack } from 'expo-router';
 import { JSX } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { DataBar } from '~/components/DataBar';
-import { ItemContent } from '~/components/ItemContent';
+import { DataBar } from '~/components/commons/DataBar';
+import { ItemContent } from '~/components/commons/ItemContent';
 
 export default function Home(): JSX.Element {
   const inventoryLabels: string[] = ['Medicamentos', 'Cosméticos', 'Suplementos', 'Higiene'];

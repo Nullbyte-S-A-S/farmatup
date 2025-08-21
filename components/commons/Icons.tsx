@@ -1,4 +1,4 @@
-import Svg, { Circle, Path, SvgProps } from "react-native-svg";
+import Svg, { Circle, G, Path, SvgProps } from "react-native-svg";
 
 export const UserSvg = ({ width = 24, height = 24, color = "#007BFF", ...props }: SvgProps) => {
     return (
@@ -141,5 +141,31 @@ export const Userprofile = ({ size = 32, color = "#000", ...props }: IconProps) 
             strokeWidth={1.5}
             d="M1 28.024c0-1.659 1.043-3.139 2.606-3.697a32.392 32.392 0 0 1 21.788 0A3.926 3.926 0 0 1 28 28.024v4.57a2 2 0 0 1-2.283 1.98l-7.399-1.057a27.002 27.002 0 0 0-7.636 0l-7.4 1.057A2 2 0 0 1 1 32.594v-4.57Z"
         />
+    </Svg>
+);
+
+interface IconProps extends SvgProps {
+    size?: number;
+    color?: string;
+}
+
+export const ArrowBack = ({ size = 24, color = "#007BFF", ...props }: IconProps) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={size}
+        height={size}
+        viewBox="0 0 20 16"
+        fill="none"
+        {...props}
+    >
+        <Path
+            fill={color}
+            fillRule="evenodd"
+            d="M8.102.767a.913.913 0 0 0-1.291 0L.724 6.854a.913.913 0 0 0 0 1.292l6.087 6.087a.913.913 0 0 0 1.291-1.292L2.661 7.5l5.441-5.441a.913.913 0 0 0 0-1.292Z"
+            clipRule="evenodd"
+        />
+        <G fill={color} opacity={0.5}>
+            <Path d="M13.543 6.586c1.161 0 2.882.34 4.338 1.39 1.503 1.082 2.663 2.878 2.663 5.61a.913.913 0 0 1-1.827 0c0-2.137-.87-3.385-1.903-4.128-1.08-.778-2.402-1.046-3.27-1.046h-9.97L2.66 7.5l.913-.913h9.97ZM.489 7.26Z" />
+        </G>
     </Svg>
 );
