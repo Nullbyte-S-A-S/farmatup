@@ -1,11 +1,9 @@
-import { Slot } from "expo-router";
+import { Slot } from 'expo-router';
 
-// export const unstable_settings = {
-//     initialRouteName: 'register',
-// };
+export const unstable_settings = {
+  initialRouteName: 'register',
+};
 
 export default function AuthLayout() {
-    return (
-        <Slot />
-    );
+  return <Slot />;
 }

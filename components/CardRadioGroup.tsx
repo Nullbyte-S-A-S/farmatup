@@ -36,17 +36,18 @@ const CardRadioGroup: React.FC<CardRadioGroupProps> = ({
               borderWidth: isSelected ? 2 : 1,
               borderColor: isSelected ? '#007AFF' : '#ccc',
               borderRadius: 8,
-              marginBottom: 12,
+              gap: 12,
               backgroundColor: isSelected ? '#e6f0ff' : '#fff',
               width: '48%',
 
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            {option.icon && <View style={{ marginRight: 12 }}>{option.icon}</View>}
-
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{option.title}</Text>
+            <View>
+              <View className="flex flex-row gap-2">
+                {option.icon && <View>{option.icon}</View>}
+                <Text style={{ fontWeight: 'bold', fontSize: 14 }}>{option.title}</Text>
+              </View>
               <Text style={{ color: '#6B7280', fontSize: 14 }}>{option.description}</Text>
             </View>
           </Pressable>
