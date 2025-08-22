@@ -6,9 +6,9 @@ export const UserProfileHeader = () => {
     <>
       <LinearGradient
         colors={['#66B0FF', '#FFFFFF']}
-        start={{ x: 0, y: 0 }}
+        start={{ x: 0, y: 0.6 }}
         end={{ x: 0, y: 1 }}
-        className="h-[262px] w-full rounded-b-[70%]"
+        className="h-[300px] w-full rounded-b-[70%]"
       />
       <TouchableOpacity
         activeOpacity={0.7}
