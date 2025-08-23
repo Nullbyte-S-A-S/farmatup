@@ -50,7 +50,7 @@ const CardRadioGroup: React.FC<CardRadioGroupProps> = ({
               alignItems: 'center',
             }}>
             <View>
-              <View className="flex flex-row gap-2">
+              <View className="flex flex-row items-center gap-2">
                 {option.icon && <View>{option.icon}</View>}
                 <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}>{option.title}</Text>
               </View>
