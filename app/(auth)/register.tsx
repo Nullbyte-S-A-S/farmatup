@@ -1,12 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CardRadioGroup from '~/components/CardRadioGroup';
 import FormInput from '~/components/commons/FormInput';
 import { ArrowRightSvg, Email, EmailVerify, Phone, Userprofile } from '~/components/commons/Icons';
 import FlexibleButton from '~/components/FlexibleButton';
 import { UserProfileHeader } from '~/components/register/UserProfileHeader';
+
 interface dataForm {
   fullName: string;
+  documentType: string;
   documentNumber: string;
   selected: boolean;
   branch: string;
@@ -15,9 +18,20 @@ interface dataForm {
   phoneNumber: string;
 }
 
+interface ErrorMessages {
+  fullName: string;
+  documentType: string;
+  documentNumber: string;
+  branch: string;
+  email: string;
+  confirmEmail: string;
+  phoneNumber: string;
+}
+
 export default function Register() {
   const [form, setForm] = useState<dataForm>({
     fullName: '',
+    documentType: '',
     documentNumber: '',
     selected: false,
     branch: '',
@@ -26,14 +40,69 @@ export default function Register() {
     phoneNumber: '',
   });
 
-  const [messageError, setMessageError] = useState({
+  const [messageError, setMessageError] = useState<ErrorMessages>({
     fullName: '',
+    documentType: '',
     documentNumber: '',
     branch: '',
     email: '',
     confirmEmail: '',
     phoneNumber: '',
   });
+
+  const validators: Record<
+    keyof ErrorMessages,
+    ((value: string, form: dataForm) => string | null)[]
+  > = {
+    fullName: [(v) => (!v ? 'Nombre completo es requerido' : null)],
+    documentType: [(v) => (!v ? 'Tipo de documento es requerido' : null)],
+    documentNumber: [(v) => (!v ? 'Número de identificación es requerido' : null)],
+    branch: [(v) => (!v ? 'Sucursal es requerida' : null)],
+    email: [(v) => (!v ? 'Correo electrónico es requerido' : null)],
+    confirmEmail: [
+      (v) => (!v ? 'Confirmar correo electrónico es requerido' : null),
+      (_, f) =>
+        f.email && f.confirmEmail && f.email !== f.confirmEmail ? 'Los correos no coinciden' : null,
+    ],
+    phoneNumber: [
+      (v) => (!v ? 'Número de celular es requerido' : null),
+      (v) => (!/^[0-9]{10}$/.test(v) ? 'Número de celular inválido' : null),
+    ],
+  };
+
+  const validateForm = () => {
+    const newMessageError: ErrorMessages = {
+      fullName: '',
+      documentType: '',
+      documentNumber: '',
+      branch: '',
+      email: '',
+      confirmEmail: '',
+      phoneNumber: '',
+    };
+
+    let isValid = true;
+
+    (Object.keys(validators) as (keyof ErrorMessages)[]).forEach((field) => {
+      for (const rule of validators[field]) {
+        const error = rule(form[field] ?? '', form);
+        if (error) {
+          newMessageError[field] = error;
+          isValid = false;
+          break;
+        }
+      }
+    });
+
+    setMessageError(newMessageError);
+    return isValid;
+  };
+
+  const handleForm = () => {
+    if (validateForm()) {
+      console.log('Formulario válido 🚀', form);
+    }
+  };
 
   const options = [
     {
@@ -47,161 +116,121 @@ export default function Register() {
       description: 'Gestión de sucursales y personal',
     },
   ];
-
-  const validateForm = useMemo(() => {
-    let isValid = true;
-    const newMessageError = { ...messageError };
-
-    if (!form.fullName) {
-      newMessageError.fullName = 'Nombre completo es requerido';
-      isValid = false;
-    }
-
-    if (!form.documentNumber) {
-      newMessageError.documentNumber = 'Número de identificación es requerido';
-      isValid = false;
-    }
-
-    if (!form.branch) {
-      newMessageError.branch = 'Sucursal es requerida';
-      isValid = false;
-    }
-
-    if (!form.email) {
-      newMessageError.email = 'Correo electrónico es requerido';
-      isValid = false;
-    }
-    if (!form.confirmEmail) {
-      newMessageError.confirmEmail = 'Confirmar correo electrónico es requerido';
-      isValid = false;
-    }
-
-    if (form.email !== form.confirmEmail) {
-      newMessageError.confirmEmail = 'Los correos no coinciden';
-      isValid = false;
-    }
-
-    if (!form.phoneNumber) {
-      newMessageError.phoneNumber = 'Número de celular es requerido';
-      isValid = false;
-    }
-    if (form.phoneNumber.length < 13 || RegExp(/^[0-9]{10}$/).test(form.phoneNumber)) {
-      newMessageError.phoneNumber = 'Número de celular inválido';
-      isValid = false;
-    }
-
-    setMessageError(newMessageError);
-    return isValid;
-  }, [form, messageError]);
-
-  const handleForm = () => {
-    if (validateForm) {
-      console.log('hello');
-    }
-  };
-
   return (
-    <ScrollView>
-      <View className="flex-1 bg-white">
-        <UserProfileHeader />
-        <View className="px-8">
-          <FormInput
-            label={'Nombre completo'}
-            hintText="Ingresa nombre completo"
-            keyboardType="default"
-            value={form.fullName}
-            onChangeText={(text: string) => setForm({ ...form, fullName: text })}
-            hasError={!!messageError.fullName}
-            errorMessage={messageError.fullName}
-            iconPrefix={
-              <View className="ml-2 mt-1">
-                <Userprofile size={18} color="#007BFF" />
-              </View>
-            }
-          />
-          <FormInput
-            label={'Número de identificación'}
-            hintText="Número de documento"
-            selectHintText="Doc"
-            type="select+input"
-            value={form.documentNumber}
-            onChangeText={(text: string) => setForm({ ...form, documentNumber: text })}
-            hasError={!!messageError.documentNumber}
-            errorMessage={messageError.documentNumber}
-            options={['CC', 'TI']}
-          />
-          <View className="mt-4">
-            <CardRadioGroup
-              options={options}
-              selectedValue={form.selected ? 'Trabajador' : 'Administrador'}
-              onValueChange={(value) => setForm({ ...form, selected: value === 'Trabajador' })}
+    <KeyboardAwareScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      extraScrollHeight={30}
+      enableOnAndroid={true}>
+      <ScrollView>
+        <View className="flex-1 bg-white">
+          <UserProfileHeader />
+          <View className="px-8">
+            <FormInput
+              label={'Nombre completo'}
+              hintText="Ingresa nombre completo"
+              keyboardType="default"
+              value={form.fullName}
+              onChangeText={(text: string) => setForm({ ...form, fullName: text })}
+              hasError={!!messageError.fullName}
+              errorMessage={messageError.fullName}
+              iconPrefix={
+                <View className="ml-2 mt-1">
+                  <Userprofile size={18} color="#007BFF" />
+                </View>
+              }
+            />
+            <FormInput
+              label={'Número de identificación'}
+              hintText="Número de documento"
+              selectHintText="Doc"
+              type="select+input"
+              value={form.documentNumber}
+              keyboardType="number-pad"
+              onChangeText={(text: string) => setForm({ ...form, documentNumber: text })}
+              onSelectOption={(option: string) => setForm({ ...form, documentType: option })}
+              hasError={!!messageError.documentType || !!messageError.documentNumber}
+              errorMessage={messageError.documentType || messageError.documentNumber}
+              options={['CC', 'TI']}
+            />
+
+            <View className="mt-4">
+              <CardRadioGroup
+                options={options}
+                selectedValue={form.selected ? 'Trabajador' : 'Administrador'}
+                onValueChange={(value) => setForm({ ...form, selected: value === 'Trabajador' })}
+              />
+            </View>
+
+            <FormInput
+              label={'Sucursal'}
+              selectHintText="Seleciona la sucursal"
+              type="select"
+              options={['Mayales', 'Nullbyte']}
+              value={form.branch}
+              onSelectOption={(option: string) => setForm({ ...form, branch: option })}
+              hasError={!!messageError.branch}
+              errorMessage={messageError.branch}
+            />
+
+            <FormInput
+              label={'Correo electrónico'}
+              autoCapitalize="none"
+              hintText="Correo@ejemplo.com"
+              keyboardType="email-address"
+              autoComplete="email"
+              value={form.email}
+              onChangeText={(text: string) => setForm({ ...form, email: text })}
+              hasError={!!messageError.email}
+              errorMessage={messageError.email}
+              iconPrefix={
+                <View className="ml-2 mt-1">
+                  <Email size={18} />
+                </View>
+              }
+            />
+
+            <FormInput
+              label={'Confirmar correo'}
+              autoCapitalize="none"
+              hintText="Confirmar correo electrónico"
+              autoComplete="email"
+              keyboardType="email-address"
+              value={form.confirmEmail}
+              onChangeText={(text: string) => setForm({ ...form, confirmEmail: text })}
+              hasError={!!messageError.confirmEmail}
+              errorMessage={messageError.confirmEmail}
+              iconPrefix={
+                <View className="ml-2 mt-1">
+                  <EmailVerify size={20} />
+                </View>
+              }
+            />
+
+            <FormInput
+              label={'Número de celular'}
+              hintText="3001234567"
+              keyboardType="phone-pad"
+              value={form.phoneNumber}
+              onChangeText={(text: string) => setForm({ ...form, phoneNumber: text })}
+              hasError={!!messageError.phoneNumber}
+              errorMessage={messageError.phoneNumber}
+              iconPrefix={
+                <View className="ml-2 mt-1">
+                  <Phone size={18} />
+                </View>
+              }
+            />
+
+            <FlexibleButton
+              style={{ marginTop: 12 }}
+              title="Crear cuenta"
+              iconSuffix={<ArrowRightSvg width={12} height={12} />}
+              onPress={handleForm}
             />
           </View>
-          <FormInput
-            label={'Sucursal'}
-            selectHintText="Seleciona la sucursal"
-            type="select"
-            options={['Mayales', 'Nullbyte']}
-            value={form.branch}
-            onChangeText={(text: string) => setForm({ ...form, branch: text })}
-            hasError={!!messageError.branch}
-            errorMessage={messageError.branch}
-          />
-          <FormInput
-            label={'Correo electrónico'}
-            hintText="Correo@ejemplo.com"
-            keyboardType="email-address"
-            autoComplete="email"
-            value={form.email}
-            onChangeText={(text: string) => setForm({ ...form, email: text })}
-            hasError={!!messageError.email}
-            errorMessage={messageError.email}
-            iconPrefix={
-              <View className="ml-2 mt-1">
-                <Email size={18} />
-              </View>
-            }
-          />
-          <FormInput
-            label={'Confirmar correo'}
-            hintText="Confirmar correo electrónico"
-            autoComplete="email"
-            keyboardType="email-address"
-            value={form.confirmEmail}
-            onChangeText={(text: string) => setForm({ ...form, confirmEmail: text })}
-            hasError={!!messageError.confirmEmail}
-            errorMessage={messageError.confirmEmail}
-            iconPrefix={
-              <View className="ml-2 mt-1">
-                <EmailVerify size={20} />
-              </View>
-            }
-          />
-          <FormInput
-            label={'Número de celular'}
-            hintText="+57 000 000 0000"
-            keyboardType="phone-pad"
-            value={form.phoneNumber}
-            onChangeText={(text: string) => setForm({ ...form, phoneNumber: text })}
-            hasError={!!messageError.phoneNumber}
-            errorMessage={messageError.phoneNumber}
-            iconPrefix={
-              <View className="ml-2 mt-1">
-                <Phone size={18} />
-              </View>
-            }
-          />
-          <FlexibleButton
-            style={{ marginTop: 12 }}
-            title={`${'Crear cuenta'}`}
-            iconSuffix={<ArrowRightSvg width={12} height={12} />}
-            onPress={() => {
-              handleForm();
-            }}
-          />
+          <View style={{ marginTop: 60 }} />
         </View>
-        <View style={{ marginTop: 60 }} />
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
