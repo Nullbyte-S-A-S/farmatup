@@ -34,6 +34,7 @@ export interface FormInputProps extends Omit<TextInputProps, 'placeholderTextCol
   containerStyle?: StyleProp<ViewStyle>;
   inputStyle?: StyleProp<TextStyle>;
   value?: string;
+  onSelectOption?: (option: string) => void;
   onChangeText?: (text: string) => void;
   errorMessage?: string;
   hasError?: boolean;
@@ -58,6 +59,7 @@ export default function FormInput({
   inputStyle,
   value: controlledValue,
   onChangeText,
+  onSelectOption,
   errorMessage,
   hasError = false,
   errorTextStyle,
@@ -96,6 +98,7 @@ export default function FormInput({
     if (!isControlled) setInternalValue(t);
     if (onChangeText) onChangeText(t);
   };
+
   const prefixBlock = <View className="mr-2">{renderIcon(iconPrefix, iconColorPrefix)}</View>;
 
   const EyeOpenSvg = ({ width = 14, height = 11 }) => (
@@ -165,7 +168,7 @@ export default function FormInput({
                 onPress={() => {
                   setSelected(item);
                   setDropdownOpen(false);
-                  if (onChangeText) onChangeText(item);
+                  if (onSelectOption) onSelectOption(item);
                 }}>
                 <Text>{item}</Text>
               </Pressable>
