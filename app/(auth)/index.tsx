@@ -1,11 +1,25 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Image, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, View } from 'react-native';
+import {
+  BackHandler,
+  Image,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import CheckboxLabel from '~/components/CheckboxLabel';
 import FlexibleButton from '~/components/FlexibleButton';
 import FormInput from '~/components/commons/FormInput';
 import { ArrowRightSvg, PasswordSvg, UserSvg } from '~/components/commons/Icons';
+import ChangePasswordModal from '~/components/modals/ChangePasswordModal';
 import { useAuthStore } from '~/store/auth';
+
 const LOGIN_LOGO = require('../../assets/img/login_img.png');
 
 export default function Login() {
@@ -17,6 +31,8 @@ export default function Login() {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
+  const [showModal, setShowModal] = useState(false);
+
   const showToast = (message: string) => {
     if (Platform.OS === 'android') {
       ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -24,6 +40,17 @@ export default function Login() {
       alert(message);
     }
   };
+
+  useEffect(() => {
+    const onBackPress = () => {
+      if (showModal) {
+        return true;
+      }
+      return false;
+    };
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => subscription.remove();
+  }, [showModal]);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,7 +76,6 @@ export default function Login() {
     return valid;
   };
 
-  // Mover a una carpeta utils
   const getFriendlyErrorMessage = (message: string) => {
     if (!message) return 'Error desconocido, por favor intenta nuevamente';
 
@@ -87,7 +113,7 @@ export default function Login() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      <ScrollView className="flex-1 bg-white px-7">
+      <ScrollView className="flex-1 bg-white px-7" keyboardShouldPersistTaps="handled">
         <View>
           <View>
             <View className="flex w-full items-center justify-center">
@@ -157,6 +183,15 @@ export default function Login() {
           </View>
         </View>
       </ScrollView>
+
+      <ChangePasswordModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={(newPass: string) => {
+          setShowModal(false);
+          showToast('Contraseña cambiada correctamente');
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -164,12 +199,12 @@ export default function Login() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     paddingTop: StatusBar.currentHeight,
   },
   content: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
