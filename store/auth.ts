@@ -9,6 +9,7 @@ interface User {
   fullname: string;
   email: string;
   role: string;
+  forcePasswordChange?: boolean;
 }
 
 interface AuthState {
