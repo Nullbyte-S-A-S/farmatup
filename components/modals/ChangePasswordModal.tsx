@@ -8,7 +8,7 @@ import BaseModal from './BaseModal';
 type ChangePasswordModalProps = {
   visible: boolean;
   onClose: () => void;
-  onSubmit?: (newPassword: string) => void;
+  onSubmit: (newPassword: string, confirmPassword: string) => void;
 };
 
 export default function ChangePasswordModal({
@@ -44,7 +44,7 @@ export default function ChangePasswordModal({
       return;
     }
     setError('');
-    onSubmit?.(newPassword);
+    onSubmit?.(newPassword, confirmPassword);
   };
 
   return (
