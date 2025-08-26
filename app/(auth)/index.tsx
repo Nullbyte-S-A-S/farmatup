@@ -111,9 +111,7 @@ export default function Login() {
       return;
     }
 
-    if (user.role?.toLowerCase() === 'admin') {
-      router.replace('/(tabs)/two');
-    } else {
+    if (user) {
       router.replace('/(tabs)');
     }
   }, [status, user, router]);
