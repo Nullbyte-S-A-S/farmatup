@@ -1,7 +1,6 @@
-import { JSX } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 
-export default function Home(): JSX.Element {
+export default function ReportsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -10,7 +9,7 @@ export default function Home(): JSX.Element {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
         <View className="flex-1 items-center justify-center">
-          <Text>Inicio</Text>
+          <Text>Reportes</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
