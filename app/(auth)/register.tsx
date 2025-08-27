@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CardRadioGroup from '~/components/CardRadioGroup';
@@ -6,6 +6,8 @@ import FormInput from '~/components/commons/FormInput';
 import { ArrowRightSvg, Email, EmailVerify, Phone, Userprofile } from '~/components/commons/Icons';
 import FlexibleButton from '~/components/FlexibleButton';
 import { UserProfileHeader } from '~/components/register/UserProfileHeader';
+import { showToast } from '~/helpers/toast';
+import { useRegisterStore } from '~/store/register';
 
 interface dataForm {
   fullName: string;
@@ -18,6 +20,17 @@ interface dataForm {
   phoneNumber: string;
 }
 
+const initialForm: dataForm = {
+  fullName: '',
+  documentType: '',
+  documentNumber: '',
+  selected: false,
+  branch: '',
+  email: '',
+  confirmEmail: '',
+  phoneNumber: '',
+};
+
 interface ErrorMessages {
   fullName: string;
   documentType: string;
@@ -29,26 +42,18 @@ interface ErrorMessages {
 }
 
 export default function Register() {
-  const [form, setForm] = useState<dataForm>({
-    fullName: '',
-    documentType: '',
-    documentNumber: '',
-    selected: false,
-    branch: '',
-    email: '',
-    confirmEmail: '',
-    phoneNumber: '',
-  });
+  const { register, error, status, message } = useRegisterStore();
+  const [form, setForm] = useState<dataForm>(initialForm);
+  const [messageError, setMessageError] = useState<ErrorMessages>(initialForm as ErrorMessages);
 
-  const [messageError, setMessageError] = useState<ErrorMessages>({
-    fullName: '',
-    documentType: '',
-    documentNumber: '',
-    branch: '',
-    email: '',
-    confirmEmail: '',
-    phoneNumber: '',
-  });
+  useEffect(() => {
+    if (status === 'success') {
+      setForm(initialForm);
+      showToast(message || 'Usuario registrado. Verifica tu correo.');
+    } else if (error) {
+      showToast(message || 'Error en el registro. Inténtalo de nuevo.');
+    }
+  }, [status, error, message]);
 
   const validators: Record<
     keyof ErrorMessages,
@@ -100,7 +105,17 @@ export default function Register() {
 
   const handleForm = () => {
     if (validateForm()) {
-      console.log('Formulario válido 🚀', form);
+      register({
+        fullname: form.fullName,
+        email: form.email,
+        role: form.selected ? 'EMPLOYED' : 'ADMIN',
+        num_cel: form.phoneNumber,
+        id_type: form.documentType,
+        num_id: form.documentNumber,
+        image: 'https://i.pravatar.cc/300',
+        branch_id: form.branch === 'Mayales' ? 1 : 2,
+        forcePasswordChange: true,
+      });
     }
   };
 
@@ -223,7 +238,7 @@ export default function Register() {
 
             <FlexibleButton
               style={{ marginTop: 12 }}
-              title="Crear cuenta"
+              title={`${status === 'loading' ? 'Cargando...' : 'Crear cuenta'}`}
               iconSuffix={<ArrowRightSvg width={12} height={12} />}
               onPress={handleForm}
             />

@@ -9,16 +9,24 @@ interface User {
   forcePasswordChange?: boolean;
 }
 
-interface LoginResponse {
+interface Register extends User {
+  num_cel: string;
+  id_type: string;
+  num_id: string;
+  image: string;
+  branch_id: number;
+}
+
+interface Response {
   message: string;
   token: string;
   user: User & { forcePasswordChange: boolean };
 }
 
 export class AuthService {
-  async login({ email, password }: { email: string; password: string }): Promise<LoginResponse> {
+  async login({ email, password }: { email: string; password: string }): Promise<Response> {
     try {
-      const { data } = await api.post<LoginResponse>('/login', { email, password });
+      const { data } = await api.post<Response>('/login', { email, password });
 
       const user: User & { forcePasswordChange: boolean } = {
         id: data.user.id,
@@ -59,6 +67,22 @@ export class AuthService {
         err?.response?.data?.message ||
         err?.message ||
         'Error al intentar cambiar la contraseña';
+      throw new Error(msj);
+    }
+  }
+
+  async userRegister(
+    resp: Omit<Register, 'id'>
+  ): Promise<{ response: Omit<Response, 'token' | 'user'> }> {
+    try {
+      const { data } = await api.post('/register', { ...resp });
+      return { response: data.message };
+    } catch (err: any) {
+      const msj =
+        err?.response?.data?.error ||
+        err?.response?.data?.message ||
+        err?.message ||
+        'Error al intentar registrar este usuario';
       throw new Error(msj);
     }
   }
