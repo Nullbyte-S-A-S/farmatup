@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   BackHandler,
   Image,
+  Keyboard,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -60,6 +61,8 @@ export default function Login() {
 
   // ------------------ Handlers ------------------
   const handleSubmit = async () => {
+    Keyboard.dismiss();
+
     if (status === 'checking') return;
     if (!validateForm()) return;
 
