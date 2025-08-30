@@ -1,3 +1,4 @@
+import { Inter_500Medium, useFonts } from '@expo-google-fonts/inter';
 import { Pressable, Text, View } from 'react-native';
 
 type CardItem = {
@@ -17,6 +18,11 @@ const CardRadioGroup: React.FC<CardRadioGroupProps> = ({
   selectedValue,
   onValueChange,
 }) => {
+  const [fontsLoaded] = useFonts({
+    Inter_500Medium,
+  });
+
+  if (!fontsLoaded) return null;
   return (
     <View
       style={{
@@ -36,18 +42,21 @@ const CardRadioGroup: React.FC<CardRadioGroupProps> = ({
               borderWidth: isSelected ? 2 : 1,
               borderColor: isSelected ? '#007AFF' : '#ccc',
               borderRadius: 8,
-              marginBottom: 12,
+              gap: 12,
               backgroundColor: isSelected ? '#e6f0ff' : '#fff',
               width: '48%',
 
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            {option.icon && <View style={{ marginRight: 12 }}>{option.icon}</View>}
-
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{option.title}</Text>
-              <Text style={{ color: '#6B7280', fontSize: 14 }}>{option.description}</Text>
+            <View>
+              <View className="flex flex-row items-center gap-2">
+                {option.icon && <View>{option.icon}</View>}
+                <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 12 }}>{option.title}</Text>
+              </View>
+              <Text style={{ fontFamily: 'Inter_500Medium', color: '#6B7280', fontSize: 12 }}>
+                {option.description}
+              </Text>
             </View>
           </Pressable>
         );

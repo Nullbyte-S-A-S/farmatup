@@ -24,21 +24,29 @@ const FlexibleButton: React.FC<FlexibleButtonProps> = ({
   width = '100%',
   backgroundColor = '#007BFF',
 }) => {
+  const disabledBackgroundColor = '#A0AEC0';
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      activeOpacity={disabled ? 1 : 0.7}
       onPress={onPress}
       disabled={disabled}
       className="flex-row items-center justify-center rounded-[10px]"
-      style={[{ height, width, backgroundColor }, style]}>
+      style={[
+        { height, width, backgroundColor: disabled ? disabledBackgroundColor : backgroundColor },
+        style,
+      ]}>
       {iconPrefix && (
         <View className="text-center" style={{ marginRight: gap ?? 8 }}>
           {iconPrefix}
         </View>
       )}
       <Text
-        style={{ fontFamily: 'Inter_500Medium', fontSize: 14 }}
-        className="text-center text-white">
+        style={{
+          fontFamily: 'Inter_500Medium',
+          fontSize: 14,
+          color: disabled ? '#718096' : 'white',
+        }}
+        className="text-center">
         {title}
       </Text>
       {iconSuffix && (
